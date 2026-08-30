@@ -1,8 +1,10 @@
-# Shiny Living Dex Guide — website
+# a Pokémon Shiny Living Dex Optimizer — the ShinyHunt Atlas
 
 https://shoosh7.github.io/shinydex/
 
-A static website version of the *Ultimate Shiny Living Dex Guide* Google Sheet. It answers one question instantly: **what's the best game and method to hunt any shiny Pokémon**, personalized to the games you own and the methods you prefer — and it tracks your shiny living dex progress.
+A static website version of my *Ultimate Shiny Living Dex Guide* Google Sheet. It answers one question instantly: **what's the best game and method to hunt any shiny Pokémon**, personalized to the games you own and the methods you prefer — and it tracks your shiny living dex progress.
+
+A tool to help you complete your shiny living dex as easily as possible.
 
 **Features:** instant search (forms, accents, and Nidoran genders all handled) · filter by generation, caught status, or hunting method ("show me everything huntable in PLA outbreaks") · per-generation completion counters · a "Pick my next hunt" button for choice paralysis · a Hunts dashboard tab with per-Pokémon counters, odds presets per method, and cumulative-odds readouts · a mood-based hunt picker (easy & hands-off, nostalgic 3DS, beginner-friendly, colorblind-friendly) · living dex progress tracking · quick-mark mode for entering an existing collection fast · dex-number search · sort by dex, name, or best odds · keyboard counting (↑/↓ while a Pokémon is open) · caught-date stamping · catch celebrations · deep links (yoursite/#gible) · backup download/restore, CSV export, and a shareable progress-card image · optional accounts with cross-device sync.
 
