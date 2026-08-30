@@ -26,7 +26,6 @@ Turning a method off (you don't own the game) removes it from consideration ever
 
 This implementation was verified against the spreadsheet's cached `BEST()`/`SECOND_BEST()` outputs: **1,089 / 1,089 exact matches** (before removing the sheet's 8 'Gen' generation-separator rows) under the sheet's default ranking.
 
-> **One fix over the original sheet:** the sheet's DexNav range points at `XY/ORAS!AD:AE`, but the DexNav species/code pair actually lives at `AF:AG` — so DexNav never won in the sheet. The website reads the correct columns, so ORAS DexNav now participates properly (it affects a handful of Pokémon like Lunatone, Solrock, Pidove, Tympole, Dwebble, and Klink that previously showed no method).
 
 ## Publish it free on GitHub Pages
 
@@ -101,4 +100,4 @@ The anon key is designed to be public — it's safe to commit. It only grants wh
 
 ## Credits
 
-Data, method research, and rankings by **Shoosh**. Shiny sprites served from pokejungle.net.
+Data, method research, and rankings by **Shoosh**. Shiny sprites served from pokejungle.net. Website created with heavy help from Claude.
