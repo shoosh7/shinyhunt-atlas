@@ -1,6 +1,6 @@
 # a Pokémon Shiny Living Dex Optimizer — the ShinyHunt Atlas
 
-https://shoosh7.github.io/shinydex/
+https://shoosh7.github.io/shinyhunt-atlas/
 
 A static website version of my *Ultimate Shiny Living Dex Guide* Google Sheet. It answers one question instantly: **what's the best game and method to hunt any shiny Pokémon**, personalized to the games you own and the methods you prefer — and it tracks your shiny living dex progress.
 
