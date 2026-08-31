@@ -3,6 +3,6 @@
    progress still saves in each visitor's browser.
    Setup walkthrough: see README.md, "Accounts & sync" section. */
 window.SUPABASE_CONFIG = {
-  url: "https://yuluobedecymrwbnrywn.supabase.co/rest/v1/",       // e.g. "https://abcdefgh.supabase.co"
+  url: "https://yuluobedecymrwbnrywn.supabase.co",       // e.g. "https://abcdefgh.supabase.co"
   anonKey: "sb_publishable_5cP3ouDt01nitmeHImP7iw_aJWQCu-9",   // the long "anon public" key from your project's API settings
 };
