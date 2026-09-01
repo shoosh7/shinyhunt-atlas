@@ -23,7 +23,8 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; background: var(--bg); }
+html, body { width: 100%; overflow-x: hidden; }
 body {
   margin: 0;
   background: var(--bg);
@@ -59,7 +60,7 @@ h1,h2,h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
 }
 .view-tab:hover { color: var(--text); }
 .view-tab.is-active { color: var(--spark); border-color: var(--line); background: var(--panel); }
-.progress { margin-left: auto; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.progress { margin-left: auto; display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .progress-spark { color: var(--spark); }
 .progress-count { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
 .progress-bar { width: 110px; height: 6px; border-radius: 3px; background: var(--panel-2); overflow: hidden; }
@@ -141,10 +142,11 @@ h1,h2,h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
   padding: 10px 16px 10px 36px;
 }
 #searchInput:focus { outline: 2px solid var(--action); outline-offset: 1px; border-color: transparent; }
-.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; width: 100%; }
 .filters select {
   background: var(--panel); color: var(--text);
   border: 1px solid var(--line); border-radius: 8px; padding: 9px 10px;
+  min-width: 0; max-width: 100%;
 }
 .chk-filter { display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; color: var(--muted); background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; cursor: pointer; }
 .chk-filter input { accent-color: var(--spark); }
@@ -299,8 +301,13 @@ h1,h2,h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
   .grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
   .mrow { grid-template-columns: 30px 1fr; }
   .mrow-odds { grid-column: 2; }
-  .topbar-inner { gap: 10px; padding: 10px 12px; }
+  .topbar-inner { gap: 4px; padding: 10px 8px; }
+  .view-tab { padding: 6px 8px; }
+  .progress-count { font-size: 12px; }
   .shell { padding: 14px 12px; }
+}
+@media (max-width: 380px) {
+  .progress-count { display: none; }
 }
 
 /* ---------- richer text additions ---------- */
