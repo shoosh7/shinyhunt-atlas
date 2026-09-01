@@ -10,6 +10,7 @@
   const STORE_KEY = "shiny-living-dex-v2";
   const SPRITE_BASE = "https://pokejungle.net/sprites/shiny/";
   const GEN_RANGES = { 1:[1,151], 2:[152,251], 3:[252,386], 4:[387,493], 5:[494,649], 6:[650,721], 7:[722,809], 8:[810,905], 9:[906,1025] };
+  const GEN_NAMES = { 1:"Kanto", 2:"Johto", 3:"Hoenn", 4:"Sinnoh", 5:"Unova", 6:"Kalos", 7:"Alola", 8:"Galar/Hisui", 9:"Paldea" };
 
   const METHODS = DEX_DATA.methods;          // [{id,name,game,console,odds,oddsNote,rank}]
   const MONS = DEX_DATA.mons;                // [{i,n,d,m:{mid:code},f?,c?,s?}]
@@ -97,11 +98,19 @@
   }
   MONS.forEach(mon => {
     mon._search = normName(mon.n + " " + (mon.f || ""));
+    mon._gen = null;
+    if (mon.d != null) {
+      for (const g of Object.keys(GEN_RANGES)) {
+        const [lo, hi] = GEN_RANGES[g];
+        if (mon.d >= lo && mon.d <= hi) { mon._gen = g; break; }
+      }
+    }
   });
 
   /* ---------- DOM refs ---------- */
   const $ = id => document.getElementById(id);
-  const grid = $("grid"), emptyState = $("emptyState"), resultMeta = $("resultMeta");
+  const grid = $("grid"), genAccordion = $("genAccordion"), emptyState = $("emptyState"), resultMeta = $("resultMeta");
+  const openGens = new Set();  // which generation accordions the user has expanded
   const searchInput = $("searchInput"), genFilter = $("genFilter"),
         caughtFilter = $("caughtFilter"), huntableFilter = $("huntableFilter"),
         methodFilter = $("methodFilter"), sortSelect = $("sortSelect"), bulkToggle = $("bulkToggle");
@@ -230,45 +239,78 @@
     return `<span class="badge badge-${tier}" title="${title.replace(/"/g, "&quot;")}">${label}</span>`;
   }
 
-  let renderQueued = null;
-  function renderGrid() {
-    const mons = visibleMons();
-    resultMeta.textContent = `${mons.length} Pokémon`;
-    emptyState.hidden = mons.length !== 0;
-    grid.innerHTML = "";
-    const frag = document.createDocumentFragment();
-    mons.forEach(mon => {
-      const picks = bestTwo(mon);
-      const card = document.createElement("article");
-      card.className = "card" + (state.caught[mon.k] ? " is-caught" : "");
-      card.tabIndex = 0;
-      card.setAttribute("role", "button");
-      card.setAttribute("aria-label", `${mon.n}${mon.f ? " (" + mon.f + ")" : ""} — open hunt details`);
-      card.dataset.mon = mon.i;
-      card.dataset.key = mon.k;
-      let badges;
-      const mf = methodFilter.value;
-      if (mf && mon.m[mf]) {
-        const meth = METHODS.find(x => x.id === mf);
-        const hint = codeHint(mon.m[mf]);
-        badges = `<span class="badge badge-filtered" title="${(meth.name + (hint ? " — " + hint : "")).replace(/"/g, "&quot;")}">${codeLabel(mon.m[mf])}</span>`;
-      } else if (picks.length === 0) {
-        badges = `<span class="badge badge-none">no hunt in your games</span>`;
-      } else {
-        badges = badgeHTML(picks[0], "best") + (picks[1] ? badgeHTML(picks[1], "second") : "");
-      }
-      const cnt = state.counters[mon.k]?.n;
-      card.innerHTML = `
+  function cardHTML(mon) {
+    const picks = bestTwo(mon);
+    let badges;
+    const mf = methodFilter.value;
+    if (mf && mon.m[mf]) {
+      const meth = METHODS.find(x => x.id === mf);
+      const hint = codeHint(mon.m[mf]);
+      badges = `<span class="badge badge-filtered" title="${(meth.name + (hint ? " — " + hint : "")).replace(/"/g, "&quot;")}">${codeLabel(mon.m[mf])}</span>`;
+    } else if (picks.length === 0) {
+      badges = `<span class="badge badge-none">no hunt in your games</span>`;
+    } else {
+      badges = badgeHTML(picks[0], "best") + (picks[1] ? badgeHTML(picks[1], "second") : "");
+    }
+    const cnt = state.counters[mon.k]?.n;
+    const label = `${mon.n}${mon.f ? " (" + mon.f + ")" : ""} — open hunt details`;
+    return `
+      <article class="card${state.caught[mon.k] ? " is-caught" : ""}" tabindex="0" role="button"
+        aria-label="${label.replace(/"/g, "&quot;")}" data-mon="${mon.i}" data-key="${mon.k}">
         <button class="catch-toggle" data-catch="${mon.k}" aria-label="Mark ${mon.n} as caught" aria-pressed="${!!state.caught[mon.k]}">✦</button>
         ${cnt > 0 && !state.caught[mon.k] ? `<span class="card-counter" title="Encounters so far in this hunt">✧ ${cnt.toLocaleString()}</span>` : ""}
         ${spriteImg(mon, "card-sprite")}
         <div class="card-dex">${mon.d != null ? "#" + String(mon.d).padStart(4, "0") : ""}</div>
         <div class="card-name">${mon.n}</div>
         ${mon.f ? `<div class="card-form">${mon.f}</div>` : ""}
-        <div class="card-badges">${badges}</div>`;
-      frag.appendChild(card);
-    });
-    grid.appendChild(frag);
+        <div class="card-badges">${badges}</div>
+      </article>`;
+  }
+
+  function hasActiveFilters() {
+    return !!(searchInput.value.trim() || genFilter.value || caughtFilter.value || methodFilter.value || huntableFilter.checked);
+  }
+
+  function renderAccordion(mons) {
+    const byGen = {};
+    const other = [];
+    mons.forEach(mon => (mon._gen ? (byGen[mon._gen] ||= []) : other).push(mon));
+    const groups = Object.keys(GEN_RANGES)
+      .map(g => ({ id: "gen-" + g, label: `Gen ${g} · ${GEN_NAMES[g]}`, mons: byGen[g] || [] }))
+      .concat(other.length ? [{ id: "other", label: "Other / special forms", mons: other }] : [])
+      .filter(g => g.mons.length);
+    genAccordion.innerHTML = groups.map(g => `
+      <details class="gen-group" data-gen-id="${g.id}"${openGens.has(g.id) ? " open" : ""}>
+        <summary class="gen-summary">
+          <span class="gen-name">${g.label}</span>
+          <span class="gen-count">${g.mons.filter(m => state.caught[m.k]).length} / ${g.mons.length}</span>
+        </summary>
+        <div class="grid gen-grid">${g.mons.map(cardHTML).join("")}</div>
+      </details>`).join("");
+  }
+  genAccordion.addEventListener("toggle", e => {
+    const d = e.target;
+    if (!d.classList || !d.classList.contains("gen-group")) return;
+    if (d.open) openGens.add(d.dataset.genId); else openGens.delete(d.dataset.genId);
+  }, true);
+
+  let renderQueued = null;
+  function renderGrid() {
+    if (hasActiveFilters()) {
+      const mons = visibleMons();
+      resultMeta.textContent = `${mons.length} Pokémon`;
+      emptyState.hidden = mons.length !== 0;
+      grid.hidden = false;
+      genAccordion.hidden = true;
+      grid.innerHTML = mons.map(cardHTML).join("");
+    } else {
+      const mons = MONS.slice().sort(sorter());
+      resultMeta.textContent = `${mons.length} Pokémon`;
+      emptyState.hidden = true;
+      grid.hidden = true;
+      genAccordion.hidden = false;
+      renderAccordion(mons);
+    }
   }
   function queueRender() {
     clearTimeout(renderQueued);
@@ -278,7 +320,8 @@
   [searchInput].forEach(el => el.addEventListener("input", queueRender));
   [genFilter, caughtFilter, huntableFilter, methodFilter].forEach(el => el.addEventListener("change", renderGrid));
 
-  grid.addEventListener("click", e => {
+  const dexResults = $("main");
+  dexResults.addEventListener("click", e => {
     const catchBtn = e.target.closest("[data-catch]");
     if (catchBtn) {
       e.stopPropagation();
@@ -290,7 +333,7 @@
     if (bulkMode) toggleCaught(card.dataset.key, card.querySelector(".catch-toggle"));
     else openModal(+card.dataset.mon);
   });
-  grid.addEventListener("keydown", e => {
+  dexResults.addEventListener("keydown", e => {
     if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("card")) {
       e.preventDefault();
       if (bulkMode) toggleCaught(e.target.dataset.key, e.target.querySelector(".catch-toggle"));
@@ -306,12 +349,19 @@
     }
     save(); renderProgress(); renderGenCounts();
     if (document.getElementById("view-hunts").classList.contains("is-active")) renderHunts();
-    const card = grid.querySelector(`.card[data-key="${key}"]`);
+    const card = dexResults.querySelector(`.card[data-key="${key}"]`);
     if (card) {
       card.classList.toggle("is-caught", !!state.caught[key]);
       const t = card.querySelector(".catch-toggle");
       t.setAttribute("aria-pressed", String(!!state.caught[key]));
       if (state.caught[key]) { t.classList.remove("just-caught"); void t.offsetWidth; t.classList.add("just-caught"); }
+      const group = card.closest(".gen-group");
+      if (group) {
+        const countEl = group.querySelector(".gen-count");
+        const total = group.querySelectorAll(".card").length;
+        const caught = group.querySelectorAll(".card.is-caught").length;
+        countEl.textContent = `${caught} / ${total}`;
+      }
     }
     if (caughtFilter.value) renderGrid();
   }
@@ -432,7 +482,7 @@
     if (nEl) { nEl.textContent = (state.counters[key]?.n || 0).toLocaleString(); nEl.classList.remove("tick"); void nEl.offsetWidth; nEl.classList.add("tick"); }
     updateChanceLine(key);
     // refresh the card chip without a full grid re-render
-    const card = grid.querySelector(`.card[data-key="${key}"]`);
+    const card = dexResults.querySelector(`.card[data-key="${key}"]`);
     if (card) {
       let chip = card.querySelector(".card-counter");
       const n = state.counters[key]?.n || 0;

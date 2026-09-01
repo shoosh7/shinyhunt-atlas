@@ -1,254 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shiny Living Dex Guide — Best Hunt Finder</title>
-<meta name="description" content="Find the best game and method to hunt any shiny Pokémon, personalized to the games you own and the methods you prefer. Track your shiny living dex.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✦</text></svg>">
-</head>
-<body>
-
-<header class="topbar">
-  <div class="topbar-inner">
-    <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Open hunt settings" aria-expanded="false">
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
-    <a class="brand" href="#" id="brandLink">
-      <span class="brand-spark" aria-hidden="true">✦</span>
-      <span class="brand-text">ShinyHunt <em>Atlas</em></span>
-    </a>
-    <nav class="views" aria-label="Views">
-      <button class="view-tab is-active" data-view="dex">Dex</button>
-      <button class="view-tab" data-view="hunts">Hunts</button>
-      <button class="view-tab" data-view="methods">Methods</button>
-    </nav>
-    <div class="progress" id="progressWrap" title="Shinies caught">
-      <span class="progress-spark" aria-hidden="true">✦</span>
-      <span class="progress-count" id="progressCount">0 / 0</span>
-      <span class="progress-bar" aria-hidden="true"><span class="progress-fill" id="progressFill"></span></span>
-    </div>
-    <span class="sync-dot" id="syncDot" hidden data-status="off" aria-hidden="true"></span>
-    <button class="account-btn" id="accountBtn" hidden>
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="5.5" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 14c.8-2.6 3-4 5.5-4s4.7 1.4 5.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span id="accountLabel">Sign in</span>
-    </button>
-  </div>
-</header>
-
-<div class="shell">
-
-  <!-- Settings rail / drawer -->
-  <aside class="rail" id="rail" aria-label="Hunt settings">
-    <div class="rail-head">
-      <h2>Your hunt setup</h2>
-      <button class="icon-btn drawer-close" id="drawerClose" aria-label="Close hunt settings">✕</button>
-    </div>
-    <p class="rail-sub">Turn off methods for games you don't own, and order the rest by preference. Every result updates instantly.</p>
-
-    <div class="rail-section">
-      <div class="rail-section-head">
-        <h3>Preset order</h3>
-      </div>
-      <div class="preset-row" role="group" aria-label="Ranking presets">
-        <button class="preset-btn" data-preset="overall">Overall best</button>
-        <button class="preset-btn" data-preset="switch">Switch first</button>
-        <button class="preset-btn" data-preset="3ds">3DS first</button>
-        <button class="preset-btn" data-preset="beforeBank">Before Bank closes</button>
-      </div>
-    </div>
-
-    <div class="rail-section">
-      <div class="rail-section-head">
-        <h3>Your data</h3>
-      </div>
-      <div class="data-row" role="group" aria-label="Backup and sharing">
-        <button class="data-btn" id="exportBtn" title="Download a backup file of your caught list, counters, and setup">Download backup</button>
-        <button class="data-btn" id="importBtn" title="Restore a backup file — caught lists are merged, nothing is lost">Restore backup</button>
-        <button class="data-btn" id="csvBtn" title="Download your dex as a spreadsheet-friendly CSV">Download CSV</button>
-        <button class="data-btn data-btn-wide" id="shareBtn" title="Save a progress card image you can share">Share progress card</button>
-      </div>
-      <input type="file" id="importFile" accept="application/json,.json" hidden>
-    </div>
-
-    <div class="rail-section">
-      <div class="rail-section-head">
-        <h3>Methods, in your order</h3>
-        <span class="rail-hint">#1 wins ties</span>
-      </div>
-      <ol class="method-list" id="methodList"></ol>
-    </div>
-  </aside>
-  <div class="drawer-scrim" id="drawerScrim" hidden></div>
-
-  <!-- Main -->
-  <main class="main" id="main">
-
-    <section class="view view-dex is-active" id="view-dex">
-      <div class="toolbar">
-        <div class="search-wrap">
-          <svg class="search-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <input type="search" id="searchInput" placeholder="Search a Pokémon or dex number…" autocomplete="off" aria-label="Search a Pokémon">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shiny Living Dex Guide — Best Hunt Finder</title>
+    <meta name="description" content="Find the best game and method to hunt any shiny Pokémon, personalized to the games you own and the methods you prefer. Track your shiny living dex.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Karla:ital,wght@0,400;0,500;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>✦</text></svg>">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <button class="icon-btn drawer-toggle" id="drawerToggle" aria-label="Open hunt settings" aria-expanded="false">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <a class="brand" href="#" id="brandLink">
+          <span class="brand-spark" aria-hidden="true">✦</span>
+          <span class="brand-text">ShinyHunt <em>Atlas</em></span>
+        </a>
+        <nav class="views" aria-label="Views">
+          <button class="view-tab is-active" data-view="dex">Dex</button>
+          <button class="view-tab" data-view="hunts">Hunts</button>
+          <button class="view-tab" data-view="methods">Methods</button>
+        </nav>
+        <div class="progress" id="progressWrap" title="Shinies caught">
+          <span class="progress-spark" aria-hidden="true">✦</span>
+          <span class="progress-count" id="progressCount">0 / 0</span>
+          <span class="progress-bar" aria-hidden="true"><span class="progress-fill" id="progressFill"></span></span>
         </div>
-        <div class="filters">
-          <select id="genFilter" aria-label="Filter by generation">
-            <option value="">All generations</option>
-            <option value="1">Gen 1 · Kanto</option>
-            <option value="2">Gen 2 · Johto</option>
-            <option value="3">Gen 3 · Hoenn</option>
-            <option value="4">Gen 4 · Sinnoh</option>
-            <option value="5">Gen 5 · Unova</option>
-            <option value="6">Gen 6 · Kalos</option>
-            <option value="7">Gen 7 · Alola</option>
-            <option value="8">Gen 8 · Galar/Hisui</option>
-            <option value="9">Gen 9 · Paldea</option>
-          </select>
-          <select id="caughtFilter" aria-label="Filter by caught status">
-            <option value="">Caught & uncaught</option>
-            <option value="uncaught">Not caught yet</option>
-            <option value="active">Hunting now (counter running)</option>
-            <option value="caught">Caught ✦</option>
-          </select>
-          <select id="methodFilter" aria-label="Filter by hunting method">
-            <option value="">Any method</option>
-          </select>
-          <label class="chk-filter">
-            <input type="checkbox" id="huntableFilter">
-            <span>Huntable in my games</span>
+        <span class="sync-dot" id="syncDot" hidden data-status="off" aria-hidden="true"></span>
+        <button class="account-btn" id="accountBtn" hidden>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="5.5" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 14c.8-2.6 3-4 5.5-4s4.7 1.4 5.5 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span id="accountLabel">Sign in</span>
+        </button>
+      </div>
+    </header>
+
+    <div class="shell">
+
+      <!-- Settings rail / drawer -->
+      <aside class="rail" id="rail" aria-label="Hunt settings">
+        <div class="rail-head">
+          <h2>Your hunt setup</h2>
+          <button class="icon-btn drawer-close" id="drawerClose" aria-label="Close hunt settings">✕</button>
+        </div>
+        <p class="rail-sub">Turn off methods for games you don't own, and order the rest by preference. Every result updates instantly.</p>
+
+        <div class="rail-section">
+          <div class="rail-section-head">
+            <h3>Preset order</h3>
+          </div>
+          <div class="preset-row" role="group" aria-label="Ranking presets">
+            <button class="preset-btn" data-preset="overall">Overall best</button>
+            <button class="preset-btn" data-preset="switch">Switch first</button>
+            <button class="preset-btn" data-preset="3ds">3DS first</button>
+            <button class="preset-btn" data-preset="beforeBank">Before Bank closes</button>
+          </div>
+        </div>
+
+        <div class="rail-section">
+          <div class="rail-section-head">
+            <h3>Your data</h3>
+          </div>
+          <div class="data-row" role="group" aria-label="Backup and sharing">
+            <button class="data-btn" id="exportBtn" title="Download a backup file of your caught list, counters, and setup">Download backup</button>
+            <button class="data-btn" id="importBtn" title="Restore a backup file — caught lists are merged, nothing is lost">Restore backup</button>
+            <button class="data-btn" id="csvBtn" title="Download your dex as a spreadsheet-friendly CSV">Download CSV</button>
+            <button class="data-btn data-btn-wide" id="shareBtn" title="Save a progress card image you can share">Share progress card</button>
+          </div>
+          <input type="file" id="importFile" accept="application/json,.json" hidden>
+        </div>
+
+        <div class="rail-section">
+          <div class="rail-section-head">
+            <h3>Methods, in your order</h3>
+            <span class="rail-hint">#1 wins ties</span>
+          </div>
+          <ol class="method-list" id="methodList"></ol>
+        </div>
+      </aside>
+      <div class="drawer-scrim" id="drawerScrim" hidden></div>
+
+      <!-- Main -->
+      <main class="main" id="main">
+
+        <section class="view view-dex is-active" id="view-dex">
+          <div class="toolbar">
+            <div class="search-wrap">
+              <svg class="search-ico" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="2"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input type="search" id="searchInput" placeholder="Search a Pokémon or dex number…" autocomplete="off" aria-label="Search a Pokémon">
+            </div>
+            <div class="filters">
+              <select id="genFilter" aria-label="Filter by generation">
+                <option value="">All generations</option>
+                <option value="1">Gen 1 · Kanto</option>
+                <option value="2">Gen 2 · Johto</option>
+                <option value="3">Gen 3 · Hoenn</option>
+                <option value="4">Gen 4 · Sinnoh</option>
+                <option value="5">Gen 5 · Unova</option>
+                <option value="6">Gen 6 · Kalos</option>
+                <option value="7">Gen 7 · Alola</option>
+                <option value="8">Gen 8 · Galar/Hisui</option>
+                <option value="9">Gen 9 · Paldea</option>
+              </select>
+              <select id="caughtFilter" aria-label="Filter by caught status">
+                <option value="">Caught & uncaught</option>
+                <option value="uncaught">Not caught yet</option>
+                <option value="active">Hunting now (counter running)</option>
+                <option value="caught">Caught ✦</option>
+              </select>
+              <select id="methodFilter" aria-label="Filter by hunting method">
+                <option value="">Any method</option>
+              </select>
+              <label class="chk-filter">
+                <input type="checkbox" id="huntableFilter">
+                <span>Huntable in my games</span>
+              </label>
+              <select id="sortSelect" aria-label="Sort order">
+                <option value="dex">Sort: Dex order</option>
+                <option value="name">Sort: Name A–Z</option>
+                <option value="odds">Sort: Best odds first</option>
+              </select>
+              <button class="chk-filter bulk-btn" id="bulkToggle" aria-pressed="false" title="Tap cards to mark caught — perfect for entering an existing collection">
+                <span aria-hidden="true">☑</span> Quick-mark mode
+              </button>
+              <button class="random-btn" id="randomHunt" title="Pick a random uncaught Pokémon you can hunt right now">
+                <span aria-hidden="true">✦</span> Pick my next hunt
+              </button>
+            </div>
+          </div>
+          <p class="bulk-hint" id="bulkHint" hidden>Quick-mark is on — tap any card to mark it caught (tap again to undo). Turn it off to open Pokémon details again.</p>
+          <p class="result-meta" id="resultMeta"></p>
+          <div class="grid" id="grid" hidden></div>
+          <div class="accordion" id="genAccordion"></div>
+          <div class="empty" id="emptyState" hidden>
+            <p class="empty-spark" aria-hidden="true">✦</p>
+            <p>No Pokémon match. Clear a filter or check the spelling — forms are searchable too (try “alolan” or “nidoran f”).</p>
+          </div>
+        </section>
+
+        <section class="view view-hunts" id="view-hunts">
+          <div class="methods-intro">
+            <h2>Your hunts in progress</h2>
+            <p>Every Pokémon with a running counter lives here — tally encounters without leaving the page. Tap a name for full details, odds, and the hunt's methods.</p>
+          </div>
+          <p class="result-meta" id="huntsStats"></p>
+          <div class="hunts-list" id="huntsList"></div>
+          <div class="empty" id="huntsEmpty" hidden>
+            <p class="empty-spark" aria-hidden="true">✧</p>
+            <p>No hunts running yet. Open any Pokémon and tap <strong>+1</strong> on its hunt counter to start one — or let us pick for you.</p>
+            <button class="random-btn" id="huntsPick"><span aria-hidden="true">✦</span> Pick my next hunt</button>
+          </div>
+        </section>
+
+        <section class="view view-methods" id="view-methods">
+          <div class="methods-intro">
+            <h2>Every hunting method, ranked your way</h2>
+            <p>These are the fourteen hunts the guide draws from. The Dex view picks the highest one <span class="nowrap">on <em>your</em> list</span> that can produce each Pokémon.</p>
+          </div>
+          <div class="methods-table" id="methodsTable"></div>
+          <div class="legend">
+            <h3>Reading the tags</h3>
+            <dl class="legend-list">
+              <div><dt><span class="badge badge-demo">PLA</span></dt><dd>The Pokémon can be hunted directly with this method. Every method's tag matches its code in the original guide.</dd></div>
+              <div><dt><span class="badge badge-demo">E·SOS</span></dt><dd><strong>E — Evolve route.</strong> The method can't find this Pokémon directly — hunt its pre-evolution, then evolve it.</dd></div>
+              <div><dt><span class="badge badge-demo">$·U-W</span></dt><dd><strong>$ — Soft reset.</strong> A static or gift encounter in this game (mostly legendaries) — save in front of it and reset until it shines.</dd></div>
+              <div><dt><span class="badge badge-demo">SV·✦DLC</span></dt><dd><strong>✦DLC.</strong> Requires that game's expansion content.</dd></div>
+            </dl>
+            <h3 class="legend-h-charm">What's the Shiny Charm?</h3>
+            <p class="legend-charm">The Shiny Charm is a key item awarded for completing a game's Pokédex. Just having it in your bag roughly triples your shiny odds in most games, which is why every method above lists its odds both with and without it. It's a grind to earn, but it pays for itself on every hunt afterward.</p>
+            <p class="legend-note">Always double-check availability before a long hunt — version exclusives aren't factored in, and a few pools (SOS especially) are messy by nature.</p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- Detail modal -->
+    <div class="modal-scrim" id="modalScrim" hidden>
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName" id="modal">
+        <button class="icon-btn modal-close" id="modalClose" aria-label="Close">✕</button>
+        <div class="modal-body" id="modalBody"></div>
+      </div>
+    </div>
+
+    <!-- Next-hunt picker -->
+    <div class="modal-scrim" id="pickerScrim" hidden>
+      <div class="modal modal-picker" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+        <button class="icon-btn modal-close" id="pickerClose" aria-label="Close">✕</button>
+        <h2 id="pickerTitle">What kind of hunt are you in the mood for?</h2>
+        <p class="auth-sub">We'll pick a random uncaught Pokémon you can hunt that way in your games.</p>
+        <div class="picker-options">
+          <button class="picker-opt" data-vibe="any">
+            <span class="picker-opt-title">✦ Surprise me</span>
+            <span class="picker-opt-desc">Anything uncaught and huntable in my games.</span>
+          </button>
+          <button class="picker-opt" data-vibe="handsoff">
+            <span class="picker-opt-title">🛋 Easy &amp; hands-off</span>
+            <span class="picker-opt-desc">Low-effort hunting — Z-A resets, Friend Safari, SOS calls, or strolling with a Catch Combo.</span>
+          </button>
+          <button class="picker-opt" data-vibe="retro3ds">
+            <span class="picker-opt-title">🕹 Chill nostalgic 3DS session</span>
+            <span class="picker-opt-desc">Dust off the 3DS — Friend Safari, Horde Encounters, or some relaxing Chain Fishing.</span>
+          </button>
+          <button class="picker-opt" data-vibe="beginner">
+            <span class="picker-opt-title">🌱 Nothing too tricky</span>
+            <span class="picker-opt-desc">Skips the chain-breaking heartbreakers: no PokéRadar patches, no Chain Fishing streaks.</span>
+          </button>
+          <button class="picker-opt" data-vibe="obvious">
+            <span class="picker-opt-title">🔔 The game tells me it's shiny</span>
+            <span class="picker-opt-desc">Hunts with unmissable sparkle sounds and effects — great if you're new to spotting shinies or colorblind. PLA, Z-A, and Let's Go.</span>
+          </button>
+        </div>
+        <p class="auth-msg" id="pickerMsg" role="status"></p>
+      </div>
+    </div>
+
+    <!-- Auth modal -->
+    <div class="modal-scrim" id="authScrim" hidden>
+      <div class="modal modal-auth" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+        <button class="icon-btn modal-close" id="authClose" aria-label="Close">✕</button>
+        <h2 id="authTitle">Sync your dex</h2>
+        <p class="auth-sub">An account saves your caught list, games, and method order — and keeps them in sync on every device. Without one, everything still saves in this browser.</p>
+        <div class="auth-tabs" role="group" aria-label="Sign in or create account">
+          <button type="button" class="auth-tab is-active" data-mode="signin">Sign in</button>
+          <button type="button" class="auth-tab" data-mode="signup">Create account</button>
+        </div>
+        <form id="authForm">
+          <label class="auth-field">Email
+            <input type="email" id="authEmail" autocomplete="email" required>
           </label>
-          <select id="sortSelect" aria-label="Sort order">
-            <option value="dex">Sort: Dex order</option>
-            <option value="name">Sort: Name A–Z</option>
-            <option value="odds">Sort: Best odds first</option>
-          </select>
-          <button class="chk-filter bulk-btn" id="bulkToggle" aria-pressed="false" title="Tap cards to mark caught — perfect for entering an existing collection">
-            <span aria-hidden="true">☑</span> Quick-mark mode
-          </button>
-          <button class="random-btn" id="randomHunt" title="Pick a random uncaught Pokémon you can hunt right now">
-            <span aria-hidden="true">✦</span> Pick my next hunt
-          </button>
-        </div>
+          <label class="auth-field">Password
+            <input type="password" id="authPassword" autocomplete="current-password" minlength="6" required>
+          </label>
+          <button type="submit" class="auth-submit" id="authSubmit">Sign in</button>
+          <p class="auth-msg" id="authMsg" role="status"></p>
+        </form>
       </div>
-      <p class="bulk-hint" id="bulkHint" hidden>Quick-mark is on — tap any card to mark it caught (tap again to undo). Turn it off to open Pokémon details again.</p>
-      <p class="result-meta" id="resultMeta"></p>
-      <div class="grid" id="grid"></div>
-      <div class="empty" id="emptyState" hidden>
-        <p class="empty-spark" aria-hidden="true">✦</p>
-        <p>No Pokémon match. Clear a filter or check the spelling — forms are searchable too (try “alolan” or “nidoran f”).</p>
-      </div>
-    </section>
-
-    <section class="view view-hunts" id="view-hunts">
-      <div class="methods-intro">
-        <h2>Your hunts in progress</h2>
-        <p>Every Pokémon with a running counter lives here — tally encounters without leaving the page. Tap a name for full details, odds, and the hunt's methods.</p>
-      </div>
-      <p class="result-meta" id="huntsStats"></p>
-      <div class="hunts-list" id="huntsList"></div>
-      <div class="empty" id="huntsEmpty" hidden>
-        <p class="empty-spark" aria-hidden="true">✧</p>
-        <p>No hunts running yet. Open any Pokémon and tap <strong>+1</strong> on its hunt counter to start one — or let us pick for you.</p>
-        <button class="random-btn" id="huntsPick"><span aria-hidden="true">✦</span> Pick my next hunt</button>
-      </div>
-    </section>
-
-    <section class="view view-methods" id="view-methods">
-      <div class="methods-intro">
-        <h2>Every hunting method, ranked your way</h2>
-        <p>These are the fourteen hunts the guide draws from. The Dex view picks the highest one <span class="nowrap">on <em>your</em> list</span> that can produce each Pokémon.</p>
-      </div>
-      <div class="methods-table" id="methodsTable"></div>
-      <div class="legend">
-        <h3>Reading the tags</h3>
-        <dl class="legend-list">
-          <div><dt><span class="badge badge-demo">PLA</span></dt><dd>The Pokémon can be hunted directly with this method. Every method's tag matches its code in the original guide.</dd></div>
-          <div><dt><span class="badge badge-demo">E·SOS</span></dt><dd><strong>E — Evolve route.</strong> The method can't find this Pokémon directly — hunt its pre-evolution, then evolve it.</dd></div>
-          <div><dt><span class="badge badge-demo">$·U-W</span></dt><dd><strong>$ — Soft reset.</strong> A static or gift encounter in this game (mostly legendaries) — save in front of it and reset until it shines.</dd></div>
-          <div><dt><span class="badge badge-demo">SV·✦DLC</span></dt><dd><strong>✦DLC.</strong> Requires that game's expansion content.</dd></div>
-        </dl>
-        <h3 class="legend-h-charm">What's the Shiny Charm?</h3>
-        <p class="legend-charm">The Shiny Charm is a key item awarded for completing a game's Pokédex. Just having it in your bag roughly triples your shiny odds in most games, which is why every method above lists its odds both with and without it. It's a grind to earn, but it pays for itself on every hunt afterward.</p>
-        <p class="legend-note">Always double-check availability before a long hunt — version exclusives aren't factored in, and a few pools (SOS especially) are messy by nature.</p>
-      </div>
-    </section>
-
-  </main>
-</div>
-
-<!-- Detail modal -->
-<div class="modal-scrim" id="modalScrim" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalName" id="modal">
-    <button class="icon-btn modal-close" id="modalClose" aria-label="Close">✕</button>
-    <div class="modal-body" id="modalBody"></div>
-  </div>
-</div>
-
-<!-- Next-hunt picker -->
-<div class="modal-scrim" id="pickerScrim" hidden>
-  <div class="modal modal-picker" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
-    <button class="icon-btn modal-close" id="pickerClose" aria-label="Close">✕</button>
-    <h2 id="pickerTitle">What kind of hunt are you in the mood for?</h2>
-    <p class="auth-sub">We'll pick a random uncaught Pokémon you can hunt that way in your games.</p>
-    <div class="picker-options">
-      <button class="picker-opt" data-vibe="any">
-        <span class="picker-opt-title">✦ Surprise me</span>
-        <span class="picker-opt-desc">Anything uncaught and huntable in my games.</span>
-      </button>
-      <button class="picker-opt" data-vibe="handsoff">
-        <span class="picker-opt-title">🛋 Easy &amp; hands-off</span>
-        <span class="picker-opt-desc">Low-effort hunting — Z-A resets, Friend Safari, SOS calls, or strolling with a Catch Combo.</span>
-      </button>
-      <button class="picker-opt" data-vibe="retro3ds">
-        <span class="picker-opt-title">🕹 Chill nostalgic 3DS session</span>
-        <span class="picker-opt-desc">Dust off the 3DS — Friend Safari, Horde Encounters, or some relaxing Chain Fishing.</span>
-      </button>
-      <button class="picker-opt" data-vibe="beginner">
-        <span class="picker-opt-title">🌱 Nothing too tricky</span>
-        <span class="picker-opt-desc">Skips the chain-breaking heartbreakers: no PokéRadar patches, no Chain Fishing streaks.</span>
-      </button>
-      <button class="picker-opt" data-vibe="obvious">
-        <span class="picker-opt-title">🔔 The game tells me it's shiny</span>
-        <span class="picker-opt-desc">Hunts with unmissable sparkle sounds and effects — great if you're new to spotting shinies or colorblind. PLA, Z-A, and Let's Go.</span>
-      </button>
     </div>
-    <p class="auth-msg" id="pickerMsg" role="status"></p>
-  </div>
-</div>
 
-<!-- Auth modal -->
-<div class="modal-scrim" id="authScrim" hidden>
-  <div class="modal modal-auth" role="dialog" aria-modal="true" aria-labelledby="authTitle">
-    <button class="icon-btn modal-close" id="authClose" aria-label="Close">✕</button>
-    <h2 id="authTitle">Sync your dex</h2>
-    <p class="auth-sub">An account saves your caught list, games, and method order — and keeps them in sync on every device. Without one, everything still saves in this browser.</p>
-    <div class="auth-tabs" role="group" aria-label="Sign in or create account">
-      <button type="button" class="auth-tab is-active" data-mode="signin">Sign in</button>
-      <button type="button" class="auth-tab" data-mode="signup">Create account</button>
-    </div>
-    <form id="authForm">
-      <label class="auth-field">Email
-        <input type="email" id="authEmail" autocomplete="email" required>
-      </label>
-      <label class="auth-field">Password
-        <input type="password" id="authPassword" autocomplete="current-password" minlength="6" required>
-      </label>
-      <button type="submit" class="auth-submit" id="authSubmit">Sign in</button>
-      <p class="auth-msg" id="authMsg" role="status"></p>
-    </form>
-  </div>
-</div>
+    <footer class="foot">
+      <p>Data & method rankings by Shoosh — built from the Ultimate Shiny Living Dex Guide. Sprites via pokejungle.net. Progress and preferences are saved in this browser.</p>
+    </footer>
 
-<footer class="foot">
-  <p>Data & method rankings by Shoosh — built from the Ultimate Shiny Living Dex Guide. Sprites via pokejungle.net. Progress and preferences are saved in this browser.</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<script src="config.js"></script>
-<script src="data.js"></script>
-<script src="app.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="config.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
 </html>
